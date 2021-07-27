@@ -25,8 +25,6 @@ class Main extends React.Component {
     }
     render(){
         console.warn(this.props.match.params.symbol);
-        const x = this.props.match.params.symbol;
-
         return (
             <div>
                 <Content 

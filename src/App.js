@@ -2,8 +2,8 @@ import './App.css';
 import React from 'react';
 import {BrowserRouter as Router, Link, Route, Switch} from 'react-router-dom';
 import Autocomplete from './Components/Autocomplete'
-import DataTable from './Components/DataGrid';
-import Content from './Components/Content';
+import List from './Components/List';
+import Main from './Main';
 //let first = true;
 class App extends React.Component {
   render(){
@@ -11,10 +11,9 @@ class App extends React.Component {
     return(
       <div>
         <Router>
-        <Autocomplete />
           <Switch>
-            <Route path="/stock/:symbol" component={DataTable}/>
-            <Route path="/info/:symbol" component={Content}/>
+            <Route path="/stock/:symbol" component={Autocomplete}/>
+            <Route path="/info/:symbol" component={Main}/>
           </Switch>
         </Router>
       </div>

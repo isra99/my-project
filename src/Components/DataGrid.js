@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios'
-import Loader from './Loader'
+
 const columns = [
   { field: 'id', headerName: 'ID', width: 120 },
   {
@@ -40,7 +40,8 @@ class DataTable extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(`https://finnhub.io/api/v1/search?q=${this.props.symbol}&token=c3ldsgaad3if71c77vtg`)
+      alert(this.props.match.params.symbol);
+        axios.get(`https://finnhub.io/api/v1/search?q=${this.props.match.params.symbol}&token=c3ldsgaad3if71c77vtg`)
             .then((resp) => {
               console.warn(resp.data.result[0])
                 let data = [];
@@ -61,10 +62,8 @@ class DataTable extends React.Component {
         }
         
     render(){
-        console.warn(this.props.symbol);
         return (
             <div style={{ height: 400, width: '100%' }}>
-              <Loader />
               <DataGrid
                 rows={this.state.rows}
                 columns={columns}
@@ -78,4 +77,5 @@ class DataTable extends React.Component {
           );
     }
 }
+
 export default withRouter(DataTable);
