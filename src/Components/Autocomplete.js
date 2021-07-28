@@ -89,7 +89,7 @@ class ControllableStates extends React.Component {
               value: newValue 
             }, () => {
               //loading: this.state.value !== null ? true : false
-              this.props.history.push(`/stock/${this.state.inputValue}`);
+              this.props.history.push(`/stock/${this.state.value}`);
               this.fetchData(this.state.value);
               alert(this.state.value);
             });
