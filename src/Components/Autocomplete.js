@@ -89,7 +89,7 @@ class ControllableStates extends React.Component {
               value: newValue 
             }, () => {
               //loading: this.state.value !== null ? true : false
-              this.props.history.push(`/stock/${this.state.value}`);
+              this.props.history.push(`/stock/${this.state.inputValue}`);
               this.fetchData(this.state.value);
               alert(this.state.value);
             });
@@ -100,7 +100,7 @@ class ControllableStates extends React.Component {
               inputValue: newInputValue 
             }, () => {
               //loading: this.state.value !== null ? true : false
-              this.fetchData(this.state.value);
+              this.fetchData(this.state.inputValue);
               //alert(this.state.value);
             });
           }}
