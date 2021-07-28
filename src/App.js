@@ -12,8 +12,9 @@ class App extends React.Component {
       <div>
         <Router>
           <Switch>
+            <Route exact path="/info/:symbol" component={Main}/>
             <Route path="/stock/:symbol" component={Autocomplete}/>
-            <Route path="/info/:symbol" component={Main}/>
+            <Route path="" component={Autocomplete}/>
           </Switch>
         </Router>
       </div>
