@@ -43,4 +43,5 @@ class Main extends React.Component {
     }
 }
 
-export default withRouter(Main);
+
+export default Main;
