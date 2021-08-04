@@ -88,6 +88,7 @@ class ControllableStates extends React.Component {
         'type': response.data.result[i].type
         });
       } 
+      this.forceUpdate();
       this.props.InputChange(data);
     });
   }
