@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { DataGrid } from '@material-ui/data-grid';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 const options = [
   "AMZN",
@@ -53,9 +54,8 @@ class ControllableStates extends React.Component {
       <div>
         <Autocomplete
           value={this.props.inputValue}
-          onChange={this.props.InputChange}
+          onChange={(newValue)=>{this.onChange(newValue)}}
           inputValue={this.props.inputValue}
-          onChange={this.props.InputChange}
           id="controllable-propss"
           options={options}
           renderInput={(params) => <TextField {...params} label="Company" variant="outlined" />}
@@ -63,7 +63,7 @@ class ControllableStates extends React.Component {
         <br />
         <div style={{ height: 400, width: '100%' }}>
             <DataGrid
-              rows={this.props.rows}
+              rows={this.props.rows?this.props.rows:[]}
               columns={columns}
               pageSize={10}
               onRowClick={() => {
@@ -74,6 +74,22 @@ class ControllableStates extends React.Component {
         </div>
       </div>
     );
+  }
+  onChange(event){
+    console.log("changed");
+    axios.get(`https://finnhub.io/api/v1/search?q=${event.target.textContent}&token=c3ldsgaad3if71c77vtg`).then((response)=>{
+      var data = [];
+      for (var i = 0; i < response.data.count; i++) {
+        data.push({
+        'id': i, 
+        'description': response.data.result[i].description, 
+        'displaySymbol': response.data.result[i].displaySymbol,
+        'symbol': response.data.result[i].symbol,
+        'type': response.data.result[i].type
+        });
+      } 
+      this.props.InputChange(data);
+    });
   }
 }
 
@@ -86,7 +102,7 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchtoProps = (dispatch) => {
   return {
-    InputChange: () => dispatch({type: "apple"})
+    InputChange: (data) => dispatch({type: "apple", data:data})
   }
 }
 export default connect (mapStatetoProps, mapDispatchtoProps)(ControllableStates);
