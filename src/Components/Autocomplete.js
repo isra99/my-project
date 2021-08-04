@@ -55,7 +55,7 @@ class ControllableStates extends React.Component {
           value={this.props.inputValue}
           onChange={this.props.InputChange}
           inputValue={this.props.inputValue}
-          onInputChange={this.props.InputChange}
+          onChange={this.props.InputChange}
           id="controllable-propss"
           options={options}
           renderInput={(params) => <TextField {...params} label="Company" variant="outlined" />}
@@ -86,7 +86,7 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchtoProps = (dispatch) => {
   return {
-    InputChange: (event, newValue) => dispatch({type: newValue})
+    InputChange: () => dispatch({type: "apple"})
   }
 }
-export default connect (mapStatetoProps, mapDispatchtoProps)(Autocomplete);
+export default connect (mapStatetoProps, mapDispatchtoProps)(ControllableStates);
