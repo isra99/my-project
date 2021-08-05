@@ -46,46 +46,44 @@ let isEmpty = true; const columns = [
   },
 ];
 
-class DataTable extends React.Component {
-    render(){
-        return (
-            <div style={{ height: 400, width: '100%' }}>
-              <DataGrid
-                rows={!!this.props.rows?this.props.rows:[]}
-                columns={columns}
-                pageSize={10}
-                onRowClick={(event) => {
-                  isEmpty = false;
-                  console.log(event.row);
-                  axios.get(`https://api.polygon.io/v1/meta/symbols/${event.row.ticker}/company?&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
-                  .then((response) => {
-                    this.props.dispatch({
-                      type: "DECREMENT",
-                      data: response.data
-                    });
-                  })
-                  axios.get(`https://api.polygon.io/v1/open-close/${event.row.ticker}/2020-10-14?adjusted=true&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
-                      .then((response) => {
-                        this.props.dispatch({
-                          type: "INC",
-                          data: response.data
-                        });
-                      })
-                }}
-              />
-              {isEmpty
-                ? <h2></h2>
-                : (isFetching
-                  ? 
-                  <Loader loading={isFetching}/>
-                  : <Main 
-                      info={this.props.info}
-                      price={this.props.price}
-                      />)
-              }
-            </div>
-          );
-    }
+const DataTable = (props) => {
+  return (
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGrid
+          rows={!!props.rows?props.rows:[]}
+          columns={columns}
+          pageSize={10}
+          onRowClick={(event) => {
+            isEmpty = false;
+            console.log(event.row);
+            axios.get(`https://api.polygon.io/v1/meta/symbols/${event.row.ticker}/company?&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
+            .then((response) => {
+              props.dispatch({
+                type: "DECREMENT",
+                data: response.data
+              });
+            })
+            axios.get(`https://api.polygon.io/v1/open-close/${event.row.ticker}/2020-10-14?adjusted=true&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
+                .then((response) => {
+                  props.dispatch({
+                    type: "INC",
+                    data: response.data
+                  });
+                })
+          }}
+        />
+        {isEmpty
+          ? <h2></h2>
+          : (isFetching
+            ? 
+            <Loader loading={isFetching}/>
+            : <Main 
+                info={props.info}
+                price={props.price}
+                />)
+        }
+      </div>
+    );
 }
 
 
