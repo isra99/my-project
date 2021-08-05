@@ -7,6 +7,7 @@ class Main extends React.Component {
     render(){
         return (
             <div>
+                <br />
                 <Content 
                     name={this.props.info.name}
                     logo={this.props.info.logo}

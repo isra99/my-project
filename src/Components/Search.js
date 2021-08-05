@@ -49,10 +49,13 @@ const columns = [
 
 const Search = (props) => {
   const [value, setValue] = useState();
+  const [oldValue, setOldValue] = useState("empty");
   const [data, setData] = useState();
   const [empty, setEmpty] = useState(true);
   const [loading, setLoading] = useState(false);
-
+useEffect(() => {
+    fetchData();
+  }, [value]);
   const onChange = (event) => {
     if(event.keyCode == 13){
       setValue(event.target.value);
@@ -64,28 +67,34 @@ const Search = (props) => {
     setLoading(true);
     axios.get(`https://api.polygon.io/v3/reference/tickers?search=${value}&active=true&sort=ticker&order=asc&limit=10&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`).then((response)=>{
       //alert(loading);
-      var output = [];
-      for (var i = 0; i < response.data.count; i++) {
-        data.push({
-        'id': i, 
-        'ticker': response.data.results[i].ticker, 
-        'name': response.data.results[i].name,
-        'market': response.data.results[i].market,
-        'locale': response.data.results[i].locale,
-        'primary_exchange': response.data.results[i].primary_exchange,
-        'type': response.data.results[i].type,
-        });
-      } 
-      setData(output);
-      setLoading(false);
-      console.log(data);
-      props.InputChange(data);
+      if(!(oldValue === value)){
+        var output = [];
+        for (var i = 0; i < response.data.count; i++) {
+          output.push({
+          'id': i, 
+          'ticker': response.data.results[i].ticker, 
+          'name': response.data.results[i].name,
+          'market': response.data.results[i].market,
+          'locale': response.data.results[i].locale,
+          'primary_exchange': response.data.results[i].primary_exchange,
+          'type': response.data.results[i].type,
+          });
+        } 
+        setData(output);
+        setOldValue(value);
+        setLoading(false);
+        console.log("TEST");
+        console.log(output);
+        props.InputChange(output);
+      } else{
+        if(oldValue === "empty"){
+          setOldValue(value);
+          fetchData();
+          alert("same");
+        }
+      }
     });
   }
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
       <div>
