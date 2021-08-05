@@ -10,12 +10,12 @@ class Main extends React.Component {
                 <Content 
                     name={this.props.info.name}
                     logo={this.props.info.logo}
-                    weburl={this.props.info.weburl}
-                    open={this.props.price.o} 
-                    high={this.props.price.h} 
-                    low={this.props.price.l} 
-                    current={this.props.price.c} 
-                    previous={this.props.price.pc}
+                    weburl={this.props.info.url}
+                    open={this.props.price.open} 
+                    high={this.props.price.high} 
+                    low={this.props.price.low} 
+                    current={this.props.price.close} 
+                    previous={this.props.price.preMarket}
                     loading={loading}
                 />
             </div>

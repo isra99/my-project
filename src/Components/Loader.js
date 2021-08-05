@@ -4,7 +4,7 @@ import '../App.css';
 
 export default function CircularUnderLoad(props) {
   return (
-    <div style={{display: !props.loading && "none"}} className="loader">
+    <div className="loader">
       <CircularProgress disableShrink />
     </div>
   )

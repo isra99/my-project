@@ -54,12 +54,20 @@ class Search extends React.Component {
     return (
       <div>
         <Autocomplete
-          value={this.props.inputValue}
-          onChange={(newValue)=>{this.onChange(newValue)}}
-          id="controllable-propss"
+          freeSolo
+          id="free-solo-2-demo"
           options={options}
-          renderInput={(params) => <TextField {...params} label="Company" variant="outlined" />}
-        />        
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              onKeyDown={(newValue)=>{this.onChange(newValue)}} 
+              label="Search input"
+              margin="normal"
+              variant="outlined"
+              InputProps={{ ...params.InputProps, type: 'search' }}
+            />
+          )}
+        />    
         <br />
         {isEmpty
           ? <h2>Search Company...</h2>
@@ -72,30 +80,31 @@ class Search extends React.Component {
     );
   }
   onChange(event){
-    isEmpty = false;
-    axios.get(`https://finnhub.io/api/v1/search?q=${event.target.textContent}&token=c3ldsgaad3if71c77vtg`).then((response)=>{
-      isFetching = true;
-      var data = [];
-      for (var i = 0; i < response.data.count; i++) {
-        data.push({
-        'id': i, 
-        'description': response.data.result[i].description, 
-        'displaySymbol': response.data.result[i].displaySymbol,
-        'symbol': response.data.result[i].symbol,
-        'type': response.data.result[i].type
-        });
-      } 
-      isFetching = false;
-      console.log(data);
-      this.props.InputChange(data);
-    });
+    if(event.keyCode == 13){
+      isEmpty = false;
+      axios.get(`https://api.polygon.io/v3/reference/tickers?search=${event.target.value}&active=true&sort=ticker&order=asc&limit=10&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`).then((response)=>{
+        isFetching = true;
+        var data = [];
+        for (var i = 0; i < response.data.count; i++) {
+          data.push({
+          'id': i, 
+          'ticker': response.data.results[i].ticker, 
+          'name': response.data.results[i].name,
+          'market': response.data.results[i].market,
+          'locale': response.data.results[i].locale,
+          'primary_exchange': response.data.results[i].primary_exchange,
+          'type': response.data.results[i].type,
+          });
+        } 
+        isFetching = false;
+        console.log(data);
+        this.props.InputChange(data);
+      });
+    }
   }
 }
 
 const mapStatetoProps = (state) => {
-  //console.log('mapState');
-  //console.log(state.inputValue);
-  //console.log(state.rows);
   return {
       inputValue: state.inputValue,
       rows: state.rows
@@ -104,7 +113,7 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchtoProps = (dispatch) => {
   return {
-    InputChange: (data) => dispatch({type: "apple", data:data})
+    InputChange: (data) => dispatch({type: "SEARCH", data:data})
   }
 }
 export default connect (mapStatetoProps, mapDispatchtoProps)(Search);

@@ -9,26 +9,38 @@ let isFetching = false;
 let isEmpty = true; const columns = [
   { field: 'id', headerName: 'ID', width: 120 },
   {
-    field: 'description',
-    headerName: 'Description',
+    field: 'ticker',
+    headerName: 'Ticker',
     width: 300,
     editable: false,
   },
   {
-    field: 'displaySymbol',
-    headerName: 'Display Symbol',
+    field: 'name',
+    headerName: 'Name',
     width: 300,
     editable: false,
   },
   {
-    field: 'symbol',
-    headerName: 'Symbol',
+    field: 'market',
+    headerName: 'Market',
     width: 300,
     editable: false,
+  },
+  {
+    field: 'locale',
+    headerName: 'Locale',
+    sortable: false,
+    width: 300,
+  },
+  {
+    field: 'primary_exchange',
+    headerName: 'Primary Exchange',
+    sortable: false,
+    width: 300,
   },
   {
     field: 'type',
-    headerName: 'Type',
+    headerName: 'type',
     sortable: false,
     width: 300,
   },
@@ -44,14 +56,15 @@ class DataTable extends React.Component {
                 pageSize={10}
                 onRowClick={(event) => {
                   isEmpty = false;
-                  axios.get(`https://finnhub.io/api/v1/stock/profile2?symbol=${event.row.symbol}&token=c3ldsgaad3if71c77vtg`)
+                  console.log(event.row);
+                  axios.get(`https://api.polygon.io/v1/meta/symbols/${event.row.ticker}/company?&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
                   .then((response) => {
                     this.props.dispatch({
                       type: "DECREMENT",
                       data: response.data
                     });
                   })
-                  axios.get(`https://finnhub.io/api/v1/quote?symbol=${event.row.symbol}&token=c3ldsgaad3if71c77vtg`)
+                  axios.get(`https://api.polygon.io/v1/open-close/${event.row.ticker}/2020-10-14?adjusted=true&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
                       .then((response) => {
                         this.props.dispatch({
                           type: "INC",
