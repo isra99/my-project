@@ -1,7 +1,6 @@
 import './App.css';
 import React from 'react';
-import Autocomplete from './Components/Autocomplete'
-import Main from './Main';
+import Search from './Components/Search'
 //let first = true;
 
 class App extends React.Component {
@@ -9,7 +8,7 @@ class App extends React.Component {
     //console.log(this.state.stock.o)
     return(
       <div>
-        <Autocomplete />
+        <Search />
       </div>
     )
   }

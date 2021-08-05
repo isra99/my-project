@@ -2,7 +2,6 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Accordion from './Accordion'
 import Loader from './Loader'
-import { withRouter } from 'react-router-dom';
 
 class Content extends React.Component {
     constructor(props){
@@ -11,7 +10,6 @@ class Content extends React.Component {
     render(){
         return (
             <div>
-                <Loader loading={this.props.loading} />
                 <Grid container spacing={3}>
                     <Grid item xs={12} sm={4}>
                         <img width="100%" src={this.props.logo} />
@@ -34,4 +32,4 @@ class Content extends React.Component {
     }
 }
 
-export default withRouter(Content);
+export default Content;

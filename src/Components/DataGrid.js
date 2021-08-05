@@ -1,9 +1,12 @@
 import * as React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-import { withRouter } from 'react-router-dom';
-import axios from 'axios'
+import { connect } from 'react-redux';
+import axios from 'axios';
+import Loader from './Loader'
+import Main from '../Main';
 
-const columns = [
+let isFetching = false;
+let isEmpty = true; const columns = [
   { field: 'id', headerName: 'ID', width: 120 },
   {
     field: 'description',
@@ -32,27 +35,52 @@ const columns = [
 ];
 
 class DataTable extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            rows: []
-        };
-    }        
     render(){
         return (
             <div style={{ height: 400, width: '100%' }}>
               <DataGrid
-                rows={this.props.rows}
+                rows={!!this.props.rows?this.props.rows:[]}
                 columns={columns}
                 pageSize={10}
-                onRowClick={() => {
-                  const win = window.open("/info/"+this.props.match.params.symbol, "_blank");
-                  win.focus();
+                onRowClick={(event) => {
+                  isEmpty = false;
+                  axios.get(`https://finnhub.io/api/v1/stock/profile2?symbol=${event.row.symbol}&token=c3ldsgaad3if71c77vtg`)
+                  .then((response) => {
+                    this.props.dispatch({
+                      type: "DECREMENT",
+                      data: response.data
+                    });
+                  })
+                  axios.get(`https://finnhub.io/api/v1/quote?symbol=${event.row.symbol}&token=c3ldsgaad3if71c77vtg`)
+                      .then((response) => {
+                        this.props.dispatch({
+                          type: "INC",
+                          data: response.data
+                        });
+                      })
                 }}
               />
+              {isEmpty
+                ? <h2></h2>
+                : (isFetching
+                  ? 
+                  <Loader loading={isFetching}/>
+                  : <Main 
+                      info={this.props.info}
+                      price={this.props.price}
+                      />)
+              }
             </div>
           );
     }
 }
 
-export default withRouter(DataTable);
+
+const mapStatetoProps = (state) => {
+  console.log(state);
+  return {
+      info: state.info,
+      price: state.price
+  }
+}
+export default connect (mapStatetoProps)(DataTable);

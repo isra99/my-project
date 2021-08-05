@@ -1,14 +1,20 @@
 
 
 const intialState = {
-    inputValue: "apple",
-    rows: []
+    rows: [],
+    info: [],
+    price: []
 }
-const Reducer = async (state = intialState, action) => {
+const Reducer = (state = intialState, action) => {
     const newState = {...state};
-    newState.inputValue = action.type;
-    newState.rows = action.data;
-    console.log(newState.rows);
+    if(action.type === 'DECREMENT'){
+        newState.info = action.data;
+    } else if(action.type === 'INC'){
+        newState.price = action.data;
+    } else{
+        newState.rows = action.data;
+    }
+    console.log(newState);
     return newState;
 }
 export default Reducer;
