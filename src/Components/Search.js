@@ -50,7 +50,6 @@ const columns = [
 const Search = (props) => {
   const [value, setValue] = useState();
   const [oldValue, setOldValue] = useState("empty");
-  const [data, setData] = useState();
   const [empty, setEmpty] = useState(true);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -66,11 +65,9 @@ const Search = (props) => {
   }
   const fetchData = () => {
     setLoading(true);
-    
     new Promise(resolve => 
       setTimeout(resolve, 5000)
       );
-
     axios.get(`https://api.polygon.io/v3/reference/tickers?search=${value}&active=true&sort=ticker&order=asc&limit=10&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`).then((response)=>{
       //alert(loading);
       if(!(oldValue === value)){
@@ -86,7 +83,6 @@ const Search = (props) => {
           'type': response.data.results[i].type,
           });
         } 
-        setData(output);
         setOldValue(value);
         setLoading(false);
         console.log("TEST");
@@ -99,6 +95,9 @@ const Search = (props) => {
           alert("same");
         }
       }
+    })
+    .catch(err =>{
+      console.log(err);
     });
   }
   

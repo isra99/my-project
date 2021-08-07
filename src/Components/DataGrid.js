@@ -72,6 +72,9 @@ const DataTable = (props) => {
       .then((response) => {
         props.SetPrice(response.data);
       })
+      .catch(err =>{
+        console.log(err);
+      })
   }
   return (
       <div style={{ height: 400, width: '100%' }}>
