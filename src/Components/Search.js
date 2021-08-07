@@ -53,7 +53,7 @@ const Search = (props) => {
   const [data, setData] = useState();
   const [empty, setEmpty] = useState(true);
   const [loading, setLoading] = useState(false);
-useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, [value]);
   const onChange = (event) => {
@@ -62,9 +62,15 @@ useEffect(() => {
       fetchData();
       setEmpty(false);
     }
+    props.SetHide(true);
   }
   const fetchData = () => {
     setLoading(true);
+    
+    new Promise(resolve => 
+      setTimeout(resolve, 5000)
+      );
+
     axios.get(`https://api.polygon.io/v3/reference/tickers?search=${value}&active=true&sort=ticker&order=asc&limit=10&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`).then((response)=>{
       //alert(loading);
       if(!(oldValue === value)){
@@ -95,7 +101,7 @@ useEffect(() => {
       }
     });
   }
-
+  
   return (
       <div>
         <Autocomplete
@@ -134,7 +140,8 @@ const mapStatetoProps = (state) => {
 
 const mapDispatchtoProps = (dispatch) => {
   return {
-    InputChange: (data) => dispatch({type: "SEARCH", data:data})
+    InputChange: (data) => dispatch({type: "SEARCH", data:data}),
+    SetHide: (data) => dispatch({type: "SETHIDE", data:data})
   }
 }
 export default connect (mapStatetoProps, mapDispatchtoProps)(Search);

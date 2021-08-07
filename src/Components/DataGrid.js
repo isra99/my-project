@@ -1,5 +1,5 @@
 
-import * as React from 'react';
+import React, { useEffect, useState } from "react";
 import { DataGrid } from '@material-ui/data-grid';
 import { connect } from 'react-redux';
 import axios from 'axios';
@@ -7,7 +7,7 @@ import Loader from './Loader'
 import Main from '../Main';
 
 let isFetching = false;
-let isEmpty = true; const columns = [
+const columns = [
   { field: 'id', headerName: 'ID', width: 120 },
   {
     field: 'ticker',
@@ -48,6 +48,31 @@ let isEmpty = true; const columns = [
 ];
 
 const DataTable = (props) => {
+  const [value, setValue] = useState();
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    fetchData();
+  }, [value]);
+  const fetchData = async () => {
+    //alert(value)
+    setLoading(true);
+    await new Promise(resolve => 
+      setTimeout(resolve, 5000)
+      );
+    await axios.get(`https://api.polygon.io/v1/meta/symbols/${value}/company?&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
+      .then((response) => {
+        props.SetInfo(response.data);
+        setLoading(false);
+
+      })
+      .catch(err =>{
+        console.log(err);
+      })
+      await axios.get(`https://api.polygon.io/v1/open-close/${value}/2020-10-14?adjusted=true&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
+      .then((response) => {
+        props.SetPrice(response.data);
+      })
+  }
   return (
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid
@@ -55,29 +80,16 @@ const DataTable = (props) => {
           columns={columns}
           pageSize={10}
           onRowClick={(event) => {
-            isEmpty = false;
-            console.log(event.row);
-            axios.get(`https://api.polygon.io/v1/meta/symbols/${event.row.ticker}/company?&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
-            .then((response) => {
-              props.dispatch({
-                type: "DECREMENT",
-                data: response.data
-              });
-            })
-            axios.get(`https://api.polygon.io/v1/open-close/${event.row.ticker}/2020-10-14?adjusted=true&apiKey=fLlAuMmLGw7lrlP7bl7lFvvagKR6eatF`)
-                .then((response) => {
-                  props.dispatch({
-                    type: "INC",
-                    data: response.data
-                  });
-                })
+            props.SetHide(false);
+            setValue(event.row.ticker);
+            fetchData();
           }}
         />
-        {isEmpty
-          ? <h2></h2>
-          : (isFetching
+        {props.hide
+          ? null
+          : (loading
             ? 
-            <Loader loading={isFetching}/>
+            <Loader />
             : <Main 
                 info={props.info}
                 price={props.price}
@@ -91,8 +103,16 @@ const DataTable = (props) => {
 const mapStatetoProps = (state) => {
   console.log(state);
   return {
+      hide: state.hide,
       info: state.info,
       price: state.price
   }
 }
-export default connect (mapStatetoProps)(DataTable);
+const mapDispatchtoProps = (dispatch) => {
+  return {
+    SetHide: (data) => dispatch({type: "SETHIDE", data:data}),
+    SetInfo: (data) => dispatch({type: "SETINFO", data:data}),
+    SetPrice: (data) => dispatch({type: "SETPRICE", data:data})
+  }
+}
+export default connect (mapStatetoProps, mapDispatchtoProps)(DataTable);
